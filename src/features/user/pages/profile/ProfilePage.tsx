@@ -9,6 +9,7 @@ import ProfilePicture from "../../../../assets/profile-picture.png"
 import Title from "../../../../shared/components/basic/Title.tsx";
 import Icon from "../../../../shared/components/basic/Icon.tsx";
 import {useLogoutUser} from "../../hooks/useUser.ts";
+import {UserVehicles} from "../../../vehicle";
 
 
 interface SettingsTabProps {
@@ -63,6 +64,7 @@ const ProfilePage = () => {
                     <FormattedStyle label="Bio" value={user?.bio || "Your Bio"}/>
                 </section>
                 {user?.user_id && <UserPreferences user_id={user.user_id}/>}
+                <UserVehicles/>
                 <section>
                     <Title title="Settings" customClassName="mt-2 mb-3"/>
                     <SettingsTab setting="Account Settings" navigateTo="account-settings"/>

@@ -42,5 +42,15 @@ export type GetUserVehicleResponse = VehicleResponse<Vehicle[]>;
 export type UpdateVehiclePayload = Partial<Vehicle>;
 export type UpdateVehicleResponse = VehicleResponse<Vehicle>;
 
+export interface UpdateVehicleOptions {
+    onSuccess?: (data: Vehicle) => void;
+    onError?: (error: AxiosError, errorData: ErrorResponse | null) => void;
+}
+
 // delete Vehicle
 export type DeleteVehicleResponse = VehicleResponse<Pick<Vehicle, 'vehicle_id'>>
+
+export interface DeleteVehicleOptions {
+    onSuccess?: (data: DeleteVehicleResponse) => void;
+    onError?: (error: AxiosError, errorData: ErrorResponse | null) => void;
+}

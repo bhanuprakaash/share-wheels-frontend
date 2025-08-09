@@ -8,11 +8,12 @@ interface ButtonProps {
     disabled?: boolean;
     children?: React.ReactNode;
     variant?: buttonVariant;
-    customClasses?:string;
+    customClasses?: string;
+    customStyles?: object;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-    const {children, type, onClick, disabled, variant = "primary",customClasses} = props;
+    const {children, type, onClick, disabled, variant = "primary", customClasses, customStyles} = props;
 
     const baseClasses = `
         flex min-w-[84px] max-w-[480px] cursor-pointer items-center
@@ -31,6 +32,7 @@ const Button: React.FC<ButtonProps> = (props) => {
             onClick={onClick}
             disabled={disabled}
             className={`${baseClasses} ${variantClasses[variant]} ${customClasses} `}
+            style={customStyles}
         >
             {children}
         </button>

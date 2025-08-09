@@ -39,8 +39,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = (
             icon: "warning",
             iconColor: 'text-yellow-500',
             bgColor: 'bg-yellow-50',
-            buttonColor: 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
-            borderColor: 'border-yellow-200',
+            buttonColor: 'bg-yellow-500 hover:bg-yellow-700 focus:ring-yellow-500',
+            borderColor: 'border-yellow-500',
         },
         success: {
             icon: "check_circle",
