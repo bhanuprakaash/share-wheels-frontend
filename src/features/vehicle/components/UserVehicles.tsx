@@ -147,7 +147,7 @@ const UserVehicles = () => {
     }
 
     return (
-        <div className="border-1 border-[#E8F2E8] p-4 rounded-xl space-y-4">
+        <div className="mt-2 rounded-xl space-y-4">
             <Title title={"Vehicles"}/>
             {
                 data?.data?.length === 0 ? (

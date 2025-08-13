@@ -30,9 +30,9 @@ const UserPreferences: React.FC<UserPreferencesProps> = ({user_id}) => {
     }
 
     return (
-        <div className="border-1 border-[#E8F2E8] p-4 rounded-xl space-y-4">
+        <div className="space-y-4">
             <Title title="Preferences"/>
-            <div className="flex space-x-4 text-sm">
+            <div className="flex mt-4 text-sm">
                 <div className="flex-1/2 flex flex-col space-y-2">
                     <PreferenceLabel label="Allow Smoking" value={data?.data?.allow_smoking ? "Yes" : "No"}/>
                     <PreferenceLabel label="Music Genre" value={data?.data?.music_genre?.join(", ") || "None"}/>

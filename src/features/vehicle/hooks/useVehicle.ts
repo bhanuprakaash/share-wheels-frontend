@@ -6,7 +6,7 @@ import type {
     AddNewVehiclePayload, DeleteVehicleOptions, DeleteVehicleResponse, GetUserVehicleResponse,
     GetVehicleByIdResponse,
     NewUserVehicleOptions,
-    NewVehicleResponse, UpdateVehicleOptions, UpdateVehiclePayload, UpdateVehicleResponse,
+    NewVehicleResponse, UpdateVehicleOptions, UpdateVehiclePayload, UpdateVehicleResponse, UseVehicleOptions,
     VehicleId
 } from "../types/vehicle.ts";
 import type {UserID} from "../../user/types/user.ts";
@@ -36,11 +36,11 @@ export const useAddVehicle = (options?: NewUserVehicleOptions) => {
     })
 }
 
-export const useGetVehicleById = (id: VehicleId) => {
+export const useGetVehicleById = (id: VehicleId | undefined, options: UseVehicleOptions) => {
     return useQuery<GetVehicleByIdResponse, AxiosError, GetVehicleByIdResponse, readonly ['vehicle', VehicleId]>({
         queryKey: vehicleKeys.vehicle(id!),
         queryFn: id ? () => getVehicleById(id!) : skipToken,
-        enabled: !!id,
+        enabled: !!id && options.enabled !== false,
     })
 }
 

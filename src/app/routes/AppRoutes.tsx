@@ -3,6 +3,7 @@ import {useSelector} from "react-redux";
 
 import {LoginPage, SignupPage} from "../../features/auth";
 import {ProfilePage, ProfileSettings, UserPreferenceSettings, PrivacyAndSecuritySettings} from "../../features/user";
+import {EditTrip, ScheduleTrip, TripDetails, TripsPage} from "../../features/trip";
 import {selectIsAuthenticated} from "../../features/auth/selectors/authSelectors.ts";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import AuthRedirectRoute from "./AuthRedirect.tsx";
@@ -23,6 +24,14 @@ const AppRoutes = () => {
                 <Route element={<ProtectedLayout/>}>
 
                     <Route path="/" element={<div>HOME</div>}/>
+
+                    {/* trip routes */}
+                    <Route path="/trip">
+                        <Route index element={<TripsPage/>}/>
+                        <Route path="schedule-trip" element={<ScheduleTrip/>}/>
+                        <Route path={`edit/:tripId`} element={<EditTrip/>}/>
+                        <Route path={`:tripId`} element={<TripDetails/>}/>
+                    </Route>
 
                     {/* profile routes */}
                     <Route path="/profile">

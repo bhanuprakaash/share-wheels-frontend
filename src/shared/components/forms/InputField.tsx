@@ -3,8 +3,8 @@ import React from "react";
 interface InputFieldProps {
     label: string,
     type: string,
-    value: string,
-    placeholder: string,
+    value?: string,
+    placeholder?: string,
     id: string,
     required?: boolean,
     name: string,

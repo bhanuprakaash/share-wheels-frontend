@@ -10,6 +10,7 @@ import Title from "../../../../shared/components/basic/Title.tsx";
 import Icon from "../../../../shared/components/basic/Icon.tsx";
 import {useLogoutUser} from "../../hooks/useUser.ts";
 import {UserVehicles} from "../../../vehicle";
+import {TripHistoryTable} from "../../../trip";
 
 
 interface SettingsTabProps {
@@ -64,6 +65,7 @@ const ProfilePage = () => {
                     <FormattedStyle label="Bio" value={user?.bio || "Your Bio"}/>
                 </section>
                 {user?.user_id && <UserPreferences user_id={user.user_id}/>}
+                {user?.user_id && <TripHistoryTable userId={user.user_id}/>}
                 <UserVehicles/>
                 <section>
                     <Title title="Settings" customClassName="mt-2 mb-3"/>

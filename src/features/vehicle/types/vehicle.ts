@@ -38,6 +38,10 @@ export interface NewUserVehicleOptions {
 export type GetVehicleByIdResponse = VehicleResponse<Vehicle>;
 export type GetUserVehicleResponse = VehicleResponse<Vehicle[]>;
 
+export interface UseVehicleOptions {
+    enabled?: boolean
+}
+
 // update vehicle
 export type UpdateVehiclePayload = Partial<Vehicle>;
 export type UpdateVehicleResponse = VehicleResponse<Vehicle>;
