@@ -57,8 +57,6 @@ const EditTrip = () => {
         if (tripId) {
             const payload = {
                 ...trip,
-                end_geopoint: {lat: 12.8398, lng: 77.6770},
-                start_geopoint: {lat: 12.9822, lng: 77.5331},
                 driver_id: userId,
             } as UpdateTripPayload;
 

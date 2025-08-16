@@ -8,7 +8,7 @@ import {useGetVehicleById} from "../../vehicle/hooks/useVehicle.ts";
 import TripDetailsCard from "../../../shared/components/cards/TripDetailsCard.tsx";
 import {useSelector} from "react-redux";
 import {selectUser} from "../../user/selectors/userSelectors.ts";
-import PlaceholderMap from "../../../assets/map.png";
+import TripMapCard from "../../../shared/components/cards/TripMapCard.tsx";
 
 const TripDetails = () => {
 
@@ -54,7 +54,10 @@ const TripDetails = () => {
             </div>
             <div className="w-full">
                 <div className="w-4/5 flex flex-col gap-3 mx-auto">
-                    <img src={PlaceholderMap} alt="placeholder map" className="w-full"/>
+                    {/*<img src={PlaceholderMap} alt="placeholder map" className="w-full"/>*/}
+                    <div className="w-full rounded-lg">
+                        <TripMapCard trip={trip}/>
+                    </div>
                     <TripDetailsCard
                         trip={trip}
                         vehicleDetails={getVehicleDetails()}

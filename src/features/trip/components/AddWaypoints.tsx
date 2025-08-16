@@ -2,6 +2,7 @@ import React from "react";
 import Icon from "../../../shared/components/basic/Icon.tsx";
 import type {CreateWaypointPayload} from "../types/waypoints.ts";
 import InputField from "../../../shared/components/forms/InputField.tsx";
+import LocationSearchField from "../../../shared/components/forms/LocationSearchField.tsx";
 
 interface WaypointsProps {
     waypoints: CreateWaypointPayload[];
@@ -38,6 +39,40 @@ const AddWaypoints: React.FC<WaypointsProps> = ({waypoints, onWaypointsChange}) 
         onWaypointsChange(updated);
     };
 
+    const handleLocationValueChange = (index: number) => (_name: string, value: string) => {
+        updateWaypoint(index, 'location_name', value);
+    };
+
+    const handleLocationSelect = (index: number) => (
+        geoPointKey: string,
+        position: { lat: number, lng: number },
+        address: {
+            countryCode?: string;
+            countryName?: string;
+            stateCode?: string;
+            state?: string;
+            county?: string;
+            city?: string;
+            district?: string;
+            subdistrict?: string;
+            street?: string;
+            postalCode?: string;
+            label?: string;
+        }
+    ) => {
+        const updated = [...waypoints];
+        const locationName = address?.label?.split(',')[0].trim();
+
+        updated[index] = {
+            ...updated[index],
+            location_name: locationName || address?.city || address?.state || address?.countryCode || '',
+            [geoPointKey]: position,
+            address_line1: address?.label?.substring(address?.label.indexOf(',') + 1).trim() || address?.city + ', ' + address?.state + ', ' + address?.countryCode,
+
+        };
+        onWaypointsChange(updated);
+    };
+
     return (
         <div className="flex flex-col gap-4 max-w-[1000px]">
             <div className="flex items-center justify-between">
@@ -67,7 +102,7 @@ const AddWaypoints: React.FC<WaypointsProps> = ({waypoints, onWaypointsChange}) 
                                 <button
                                     type="button"
                                     onClick={() => removeWaypoint(index)}
-                                    className="text-red-500 hover:text-red-700 transition-colors"
+                                    className="text-red-500 hover:text-red-700 transition-colors cursor-pointer"
                                 >
                                     <Icon icon="delete"/>
                                 </button>
@@ -75,16 +110,16 @@ const AddWaypoints: React.FC<WaypointsProps> = ({waypoints, onWaypointsChange}) 
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="flex flex-col gap-1">
-                                    <InputField
-                                        name="location_name"
-                                        id={`location_name_${index}`}
+                                    <LocationSearchField
                                         label="Location Name"
-                                        type="text"
+                                        id={`location_name_${index}`}
+                                        name="location_name"
                                         value={waypoint.location_name}
-                                        onChange={(e) =>
-                                            updateWaypoint(index, 'location_name', e.target.value)
-                                        }
                                         placeholder="e.g., Downtown Mall"
+                                        onValueChange={handleLocationValueChange(index)}
+                                        onLocationSelect={handleLocationSelect(index)}
+                                        geoPointKey="geopoint"
+                                        containerClassNames="max-w-full"
                                     />
                                 </div>
 

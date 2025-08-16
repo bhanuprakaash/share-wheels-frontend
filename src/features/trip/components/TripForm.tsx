@@ -6,6 +6,29 @@ import AddWaypoints from "./AddWaypoints.tsx";
 import type {CreateWaypointPayload} from "../types/waypoints.ts";
 import type {CombinedCreateTripPayload, UpdateTripPayload} from "../types/trip.ts";
 import SelectField from "../../../shared/components/forms/SelectField.tsx";
+import LocationSearchField from "../../../shared/components/forms/LocationSearchField.tsx";
+
+export interface LocationOption {
+    label: string;
+    value: string;
+    position: {
+        lat: number;
+        lng: number;
+    },
+    address: {
+        countryCode?: string;
+        countryName?: string;
+        stateCode?: string;
+        state?: string;
+        county?: string;
+        city?: string;
+        district?: string;
+        subdistrict?: string;
+        street?: string;
+        postalCode?: string;
+        label?: string;
+    };
+}
 
 interface TripFormProps<T extends CombinedCreateTripPayload | UpdateTripPayload> {
     trip: T,
@@ -17,7 +40,6 @@ interface TripFormProps<T extends CombinedCreateTripPayload | UpdateTripPayload>
 const TripForm = <T extends CombinedCreateTripPayload | UpdateTripPayload>(
     {trip, setTrip, vehicleOptions, onSave}: TripFormProps<T>
 ) => {
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value, type} = e.target;
         setTrip(prev => ({
@@ -33,6 +55,13 @@ const TripForm = <T extends CombinedCreateTripPayload | UpdateTripPayload>(
         }));
     };
 
+    const handleLocationValueChange = (name: string, value: string) => {
+        setTrip(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     return (
         <div className="flex flex-col items-center w-full">
 
@@ -40,14 +69,21 @@ const TripForm = <T extends CombinedCreateTripPayload | UpdateTripPayload>(
 
                 <div className="flex flex-col gap-6 pb-3">
                     <div className="flex gap-6">
-                        <InputField
-                            label="Start Location Name"
-                            type="text"
+                        <LocationSearchField
+                            label="Start Location"
                             id="start_location_name"
                             name="start_location_name"
                             value={trip.start_location_name}
-                            placeholder="e.g., Downtown Station"
-                            onChange={handleInputChange}
+                            placeholder="e.g., 123 Main St, City"
+                            onValueChange={handleLocationValueChange}
+                            onLocationSelect={(geoPointKey, position, address) => {
+                                setTrip(prev => ({
+                                    ...prev,
+                                    [geoPointKey]: position,
+                                    "start_address_line1": address?.label?.substring(address?.label.indexOf(',') + 1).trim() || address?.city + ', ' + address?.state + ', ' + address?.countryCode,
+                                }));
+                            }}
+                            geoPointKey="start_geopoint"
                             required
                             containerClassNames="flex-1"
                         />
@@ -66,14 +102,21 @@ const TripForm = <T extends CombinedCreateTripPayload | UpdateTripPayload>(
                     </div>
 
                     <div className="flex gap-6">
-                        <InputField
+                        <LocationSearchField
                             label="Destination Location Name"
-                            type="text"
                             id="end_location_name"
                             name="end_location_name"
                             value={trip.end_location_name}
                             placeholder="e.g., Airport Terminal"
-                            onChange={handleInputChange}
+                            onValueChange={handleLocationValueChange}
+                            onLocationSelect={(geoPointKey, position, address) => {
+                                setTrip(prev => ({
+                                    ...prev,
+                                    [geoPointKey]: position,
+                                    "end_address_line1": address?.label?.substring(address?.label.indexOf(',') + 1).trim() || address?.city + ', ' + address?.state + ', ' + address?.countryCode,
+                                }));
+                            }}
+                            geoPointKey="end_geopoint"
                             required
                             containerClassNames="flex-1"
                         />
@@ -170,16 +213,16 @@ const TripForm = <T extends CombinedCreateTripPayload | UpdateTripPayload>(
 
                 <hr className="border-t-[1px] border-[#E8F2E8] w-[1000px]"/>
 
-            </div>
+                <Button
+                    type="button"
+                    variant={"primary"}
+                    customClasses={"text-base mt-3 font-semibold mr-auto w-[200px]"}
+                    onClick={onSave}
+                >
+                    Share Wheels
+                </Button>
 
-            <Button
-                type="button"
-                variant={"primary"}
-                customClasses={"text-base mt-3 font-semibold mr-auto ml-4 w-[200px]"}
-                onClick={onSave}
-            >
-                Share Wheels
-            </Button>
+            </div>
 
         </div>
     );
