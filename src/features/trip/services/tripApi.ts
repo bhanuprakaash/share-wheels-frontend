@@ -8,6 +8,7 @@ import type {
 import type {UserID} from "../../user/types/user.ts";
 import axiosInstance from "../../../shared/api/axiosInstance.ts";
 import type {ApiResponse} from "../../../shared/types/global.ts";
+import type {SearchResultsResponse, TripSearchQuery} from "../types/search.ts";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const TRIP_URL = `${BASE_URL}/api/trip`;
@@ -19,6 +20,19 @@ export const createTrip = async (tripPayload: CombinedCreateTripPayload): Promis
 
 export const getTripByTripId = async (tripId: TripId): Promise<TripResponse> => {
     const response = await axiosInstance.get(`${TRIP_URL}/${tripId}`);
+    return response.data;
+}
+
+export const searchTripsByFilters = async (filters: TripSearchQuery): Promise<SearchResultsResponse> => {
+    const params = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(filters)) {
+        if (value !== undefined && value !== null) {
+            params.append(key, value.toString());
+        }
+    }
+
+    const response = await axiosInstance.get(`${TRIP_URL}?${params.toString()}`);
     return response.data;
 }
 

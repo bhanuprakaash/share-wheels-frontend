@@ -32,6 +32,7 @@ interface LocationSearchFieldProps {
     geoPointKey?: string;
     required?: boolean;
     containerClassNames?: string;
+    inputClassNames?: string;
 }
 
 const LocationSearchField: React.FC<LocationSearchFieldProps> = (
@@ -45,7 +46,8 @@ const LocationSearchField: React.FC<LocationSearchFieldProps> = (
         onLocationSelect,
         geoPointKey,
         required,
-        containerClassNames
+        containerClassNames,
+        inputClassNames
     }) => {
     const [options, setOptions] = useState<LocationOption[]>([]);
     const [showOptions, setShowOptions] = useState(false);
@@ -119,6 +121,7 @@ const LocationSearchField: React.FC<LocationSearchFieldProps> = (
                 placeholder={placeholder}
                 onChange={(e) => onValueChange(name, e.target.value)}
                 required={required}
+                containerClassNames={inputClassNames}
             />
             {showOptions && (
                 <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
