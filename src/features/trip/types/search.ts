@@ -1,5 +1,8 @@
+import type {AxiosError} from "axios";
+
 import type {Waypoint} from "./waypoints.ts";
-import type {ApiResponse} from "../../../shared/types/global.ts";
+import type {ApiResponse, ErrorResponse} from "../../../shared/types/global.ts";
+import type {Booking} from "./booking.ts";
 
 type WaypointPurpose = 'pickup' | 'dropoff' | 'intermediate';
 
@@ -50,3 +53,8 @@ export interface SearchResultData {
 }
 
 export type SearchResultsResponse = ApiResponse<SearchResultData>;
+
+export interface CreateBookingOptions {
+    onSuccess?: (data: Booking) => void;
+    onError?: (error: AxiosError, errorData: ErrorResponse | null) => void;
+}
