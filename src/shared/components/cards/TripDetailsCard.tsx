@@ -1,7 +1,7 @@
 import profilePicture from "../../../assets/profile-picture.png";
 import FormattedStyle from "../basic/FormattedStyle.tsx";
-import {convertISOtoLocalDate, convertISOtoLocalTime} from "../../utils/common.ts";
-import type {TripDataWithWaypoints} from "../../../features/trip/types/trip.ts";
+import { convertISOtoLocalDate, convertISOtoLocalTime } from "../../utils/common.ts";
+import type { TripDataWithWaypoints } from "../../../features/trip/types/trip.ts";
 import React from "react";
 
 interface TripDetailsCardProps {
@@ -11,7 +11,8 @@ interface TripDetailsCardProps {
     driver: {
         name: string,
         profile_picture: string | undefined,
-    }
+    },
+    passengers?: React.ReactNode
 }
 
 const TripDetailsCard: React.FC<TripDetailsCardProps> = (
@@ -19,7 +20,8 @@ const TripDetailsCard: React.FC<TripDetailsCardProps> = (
         trip,
         vehicleDetails,
         showVehicle,
-        driver
+        driver,
+        passengers
     }) => {
 
     const {
@@ -37,16 +39,16 @@ const TripDetailsCard: React.FC<TripDetailsCardProps> = (
         <div className="flex flex-col gap-2">
             <div>
                 <div className="flex gap-2">
-                    <FormattedStyle label="Departure" value={start_location_name} customClassName="flex-1"/>
-                    <FormattedStyle label="Arrival" value={end_location_name} customClassName="flex-1"/>
+                    <FormattedStyle label="Departure" value={start_location_name} customClassName="flex-1" />
+                    <FormattedStyle label="Arrival" value={end_location_name} customClassName="flex-1" />
                 </div>
-                <FormattedStyle label="Trip" value={waypointsString}/>
+                <FormattedStyle label="Trip" value={waypointsString} />
                 <div className="flex gap-2">
-                    <FormattedStyle label="Available Seats" value={available_seats} customClassName="flex-1"/>
+                    <FormattedStyle label="Available Seats" value={available_seats} customClassName="flex-1" />
                     <FormattedStyle label="Departure Date" value={convertISOtoLocalDate(departure_time)}
-                                    customClassName="flex-1"/>
+                        customClassName="flex-1" />
                     <FormattedStyle label="Departure Time" value={convertISOtoLocalTime(departure_time)}
-                                    customClassName="flex-1"/>
+                        customClassName="flex-1" />
                 </div>
                 <div className="flex gap-2">
                     <FormattedStyle
@@ -73,13 +75,21 @@ const TripDetailsCard: React.FC<TripDetailsCardProps> = (
                 <p className="text-xl font-semibold">Driver</p>
                 <div className="flex items-center gap-2 p-2 px-0">
                     <img src={driver.profile_picture || profilePicture} alt="profile-picture"
-                         className="w-16 h-16 rounded-full"/>
+                        className="w-12 h-12 rounded-full object-cover" />
                     <div>
                         <p className="text-sm">{driver.name}</p>
                         <p className="text-xs text-[#598C59]">Driver</p>
                     </div>
                 </div>
             </div>
+            {passengers && (
+                <div>
+                    <p className="text-xl font-semibold">Passengers</p>
+                    <div className="flex flex-col gap-2">
+                        {passengers}
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

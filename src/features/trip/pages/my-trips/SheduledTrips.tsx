@@ -1,20 +1,21 @@
 import React from "react";
 
 import Title from "../../../../shared/components/basic/Title.tsx";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TripCard from "../../../../shared/components/cards/TripCard.tsx";
 import Button from "../../../../shared/components/forms/Button.tsx";
-import type {TripDataWithWaypoints, TripId} from "../../types/trip.ts";
-import DropdownMenu, {type DropdownItem} from "../../../../shared/components/modals/DropdownMenu.tsx";
-import {useUpdateTripStatus} from "../../hooks/useTrip.ts";
-import {useSelector} from "react-redux";
-import {selectUserId} from "../../../user/selectors/userSelectors.ts";
+import type { TripDataWithWaypoints, TripId } from "../../types/trip.ts";
+import DropdownMenu, { type DropdownItem } from "../../../../shared/components/modals/DropdownMenu.tsx";
+import { useUpdateTripStatus } from "../../hooks/useTrip.ts";
+import { useSelector } from "react-redux";
+import { selectUserId } from "../../../user/selectors/userSelectors.ts";
+import TripBookings from "../../components/TripBookings";
 
 interface ScheduledTripsProps {
     trips: TripDataWithWaypoints[]
 }
 
-const ScheduledTrips: React.FC<ScheduledTripsProps> = ({trips}) => {
+const ScheduledTrips: React.FC<ScheduledTripsProps> = ({ trips }) => {
     const navigate = useNavigate();
     const userId = useSelector(selectUserId);
     const updateTripStatusMutation = useUpdateTripStatus();
@@ -58,7 +59,7 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({trips}) => {
     return (
         <div className="flex flex-col gap-2 w-full">
             <div className="flex justify-between items-center gap-2 p-2">
-                <Title title="Scheduled trips"/>
+                <Title title="Scheduled trips" />
                 <Link
                     to="schedule-trip"
                     className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-3xl px-6 py-2 leading-normal tracking-[0.015em] bg-[#E8F2E8] text-[#0F1A0F]"
@@ -70,7 +71,12 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({trips}) => {
                 <div className="text-center">No trips scheduled</div>
             ) : (
                 trips.map((trip) => (
-                    <TripCard key={trip.trip_id} trip={trip} onClick={() => navigate(`${trip.trip_id}`)}>
+                    <TripCard
+                        key={trip.trip_id}
+                        trip={trip}
+                        onClick={() => navigate(`${trip.trip_id}`)}
+                        bottomContent={<TripBookings tripId={trip.trip_id} />}
+                    >
                         <Button
                             type="button"
                             variant={"secondary"}

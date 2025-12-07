@@ -10,6 +10,7 @@ import TripCard from "../../../../shared/components/cards/TripCard";
 import Button from "../../../../shared/components/forms/Button";
 import Modal from "../../../../shared/components/modals/Modal";
 import InputField from "../../../../shared/components/forms/InputField";
+import { useNavigate } from "react-router-dom";
 
 const LoadingState = () => (
   <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
@@ -32,6 +33,7 @@ const EmptyState = () => (
 const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
   const [selectedTrip, setSelectedTrip] = useState<SearchTripData | null>(null);
   const [bookedSeats, setBookedSeats] = useState<number>(1);
+  const navigate = useNavigate();
 
   const handleOpenModal = (trip: SearchTripData) => {
     setSelectedTrip(trip);
@@ -42,6 +44,7 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
     onSuccess: (data) => {
       console.log("Booking successful");
       console.log(data);
+      navigate("/rides")
     },
     onError: (error) => {
       console.error("Booking failed:", error);
@@ -54,13 +57,37 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
 
   const handleCreateBooking = () => {
     if (!selectedTrip || !userId) return;
+
     if (bookedSeats > selectedTrip.available_seats) {
       alert("You cannot book more seats than available!");
       return;
     }
-    const isWaypointBooking =
-      Array.isArray(selectedTrip.waypoints) &&
-      selectedTrip.waypoints.length > 0;
+
+    const waypoints = Array.isArray(selectedTrip.waypoints)
+      ? selectedTrip.waypoints
+      : [];
+
+    const isWaypointBooking = waypoints.length > 0;
+    let waypointData = null;
+
+    if (waypoints.length === 0) {
+      // 🚀 Case 0: No waypoints
+      waypointData = null;
+    } else if (waypoints.length >= 2) {
+      // 🚀 Case 1: Multiple waypoints
+      waypointData = waypoints;
+    } else if (waypoints.length === 1) {
+      // 🚀 Case 2: Exactly one waypoint
+      const wp = waypoints[0];
+
+      // Build enriched data with additional info
+      waypointData = {
+        ...wp,
+        waypoint_type: wp.waypoint_purpose === "dropoff" ? "dropoff" : "pickup",
+        start_location_name: selectedTrip.start_location_name,
+        end_location_name: selectedTrip.end_location_name,
+      };
+    }
 
     const payload: BookingPayload = {
       trip_id: selectedTrip.trip_id,
@@ -68,11 +95,16 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
       booked_seats: bookedSeats,
       fare_amount: selectedTrip.price_per_seat * bookedSeats,
       is_waypoint_booking: isWaypointBooking,
-      waypoint_data: isWaypointBooking ? selectedTrip.waypoints : null,
+      waypoint_data: {
+        waypoints: waypoints || [],
+        start_location_name: selectedTrip.start_location_name,
+        end_location_name: selectedTrip.end_location_name,
+      },
     };
 
     createBookingMutation.mutate({ bookingPayload: payload });
   };
+
   return (
     <div className="flex flex-col gap-4">
       {trips.map((trip) => (

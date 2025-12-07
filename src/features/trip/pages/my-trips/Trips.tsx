@@ -1,8 +1,8 @@
 import ScheduledTrips from "./SheduledTrips.tsx";
 import ActiveTrips from "./ActiveTrips.tsx";
-import {useSelector} from "react-redux";
-import {selectUserId} from "../../../user/selectors/userSelectors.ts";
-import {useGetDriverTrips} from "../../hooks/useTrip.ts";
+import { useSelector } from "react-redux";
+import { selectUserId } from "../../../user/selectors/userSelectors.ts";
+import { useGetDriverTrips } from "../../hooks/useTrip.ts";
 
 const Trips = () => {
     const userId = useSelector(selectUserId);
@@ -17,8 +17,8 @@ const Trips = () => {
 
     return (
         <div className="flex flex-col gap-6">
-            {activeTrips.length > 0 && <ActiveTrips trips={activeTrips}/>}
-            <ScheduledTrips trips={scheduledTrips}/>
+            {activeTrips.length > 0 && <ActiveTrips trips={activeTrips} />}
+            <ScheduledTrips trips={scheduledTrips} />
         </div>
     )
 }

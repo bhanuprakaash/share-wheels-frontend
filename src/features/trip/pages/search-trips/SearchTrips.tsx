@@ -39,7 +39,6 @@ const SearchTrips = () => {
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(formState);
     if (formState.start_geopoint && formState.end_geopoint) {
       refetch();
     }

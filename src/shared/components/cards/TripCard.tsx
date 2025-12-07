@@ -1,18 +1,19 @@
 import React from "react";
 
-import type {TripDataWithWaypoints} from "../../../features/trip/types/trip.ts";
+import type { TripDataWithWaypoints } from "../../../features/trip/types/trip.ts";
 import Icon from "../basic/Icon.tsx";
-import {convertISOtoLocalDate, convertISOtoLocalTime} from "../../utils/common.ts";
-import type {SearchTripData, WaypointInSearch} from "../../../features/trip/types/search.ts";
+import { convertISOtoLocalDate, convertISOtoLocalTime } from "../../utils/common.ts";
+import type { SearchTripData, WaypointInSearch } from "../../../features/trip/types/search.ts";
 
 interface TripCardProps {
     trip: TripDataWithWaypoints | SearchTripData,
     children?: React.ReactNode,
     onClick?: () => void,
-    variant?: 'default' | 'search'
+    variant?: 'default' | 'search',
+    bottomContent?: React.ReactNode
 }
 
-const TripCard: React.FC<TripCardProps> = ({trip, children, onClick, variant = 'default'}) => {
+const TripCard: React.FC<TripCardProps> = ({ trip, children, onClick, variant = 'default', bottomContent }) => {
 
     const getDisplayLocations = () => {
         if (variant === 'search' && trip.waypoints && trip.waypoints.length >= 1) {
@@ -29,7 +30,7 @@ const TripCard: React.FC<TripCardProps> = ({trip, children, onClick, variant = '
                 }
             });
 
-            return {startLocation, endLocation};
+            return { startLocation, endLocation };
         }
 
         return {
@@ -38,7 +39,7 @@ const TripCard: React.FC<TripCardProps> = ({trip, children, onClick, variant = '
         };
     };
 
-    const {startLocation, endLocation} = getDisplayLocations();
+    const { startLocation, endLocation } = getDisplayLocations();
 
     const getWaypointsDisplay = () => {
         if (variant === 'search') {
@@ -55,7 +56,7 @@ const TripCard: React.FC<TripCardProps> = ({trip, children, onClick, variant = '
                 <div className="flex justify-between items-center p-2">
                     <div className="flex gap-6 items-center p-2">
                         <h4 className='text-xl max-w-sm font-medium'>{startLocation}</h4>
-                        <Icon icon="arrow_forward"/>
+                        <Icon icon="arrow_forward" />
                         <h4 className='text-xl max-w-sm font-medium'>{endLocation}</h4>
                     </div>
                     <p className="mr-6 border-1 border-[#E8F2E8] text-[#598C59] font-bold p-2 rounded-md">{trip.price_per_seat}</p>
@@ -84,6 +85,11 @@ const TripCard: React.FC<TripCardProps> = ({trip, children, onClick, variant = '
                     {children}
                 </div>
             </div>
+            {bottomContent && (
+                <div className="p-2 px-4 border-t border-[#E8F2E8]">
+                    {bottomContent}
+                </div>
+            )}
         </div>
     )
 }
