@@ -1,7 +1,8 @@
 import React from "react";
-import type { Booking } from "../../../features/trip/types/booking";
+import type { Booking, WaypointData } from "../../../features/trip/types/booking";
 import Icon from "../basic/Icon";
 import { convertISOtoLocalDate, convertISOtoLocalTime } from "../../utils/common";
+import { useGetTrip } from "../../../features/trip/hooks/useTrip";
 
 interface BookingCardProps {
   booking: Booking;
@@ -34,25 +35,21 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
   const { waypoint_data } = booking;
 
-  if (Array.isArray(waypoint_data)) {
-    if (waypoint_data.length > 0) {
-      const wp = waypoint_data[0];
-      if (wp.waypoint_purpose === 'dropoff') {
-        endLocation = wp.location_name;
-      } else if (wp.waypoint_purpose === 'pickup') {
-        startLocation = wp.location_name;
-      }
-    }
-  } else if (waypoint_data) {
-    if (waypoint_data.start_location_name) startLocation = waypoint_data.start_location_name;
-    if (waypoint_data.end_location_name) endLocation = waypoint_data.end_location_name;
+  const { data: trip } = useGetTrip(booking.trip_id);
 
-    if (!waypoint_data.start_location_name && !waypoint_data.end_location_name) {
-      if (waypoint_data.waypoint_purpose === 'dropoff') {
-        endLocation = waypoint_data.location_name;
-      } else if (waypoint_data.waypoint_purpose === 'pickup') {
-        startLocation = waypoint_data.location_name;
-      }
+
+  if (waypoint_data) {
+    const wp: WaypointData = Array.isArray(waypoint_data)
+      ? waypoint_data[0]
+      : waypoint_data;
+
+    if (wp.start_location_name) startLocation = wp.start_location_name;
+    if (wp.end_location_name) endLocation = wp.end_location_name;
+
+    if (wp.waypoint_purpose === 'pickup') {
+      startLocation = wp.location_name;
+    } else if (wp.waypoint_purpose === 'dropoff') {
+      endLocation = wp.location_name;
     }
   }
 
@@ -105,7 +102,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
               Cancel
             </button>
           )}
-          {onComplete && booking.bookings_status === 'ACCEPTED' && (
+          {onComplete && booking.bookings_status === 'ACCEPTED' && trip?.data?.trip_status === 'IN_PROGRESS' && (
             <button
               onClick={(e) => { e.stopPropagation(); onComplete(); }}
               className="px-3 py-1 text-sm text-green-600 border border-green-600 rounded hover:bg-green-50 cursor-pointer"

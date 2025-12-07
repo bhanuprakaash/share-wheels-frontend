@@ -95,11 +95,7 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
       booked_seats: bookedSeats,
       fare_amount: selectedTrip.price_per_seat * bookedSeats,
       is_waypoint_booking: isWaypointBooking,
-      waypoint_data: {
-        waypoints: waypoints || [],
-        start_location_name: selectedTrip.start_location_name,
-        end_location_name: selectedTrip.end_location_name,
-      },
+      waypoint_data: waypointData,
     };
 
     createBookingMutation.mutate({ bookingPayload: payload });

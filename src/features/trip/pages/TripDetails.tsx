@@ -49,7 +49,7 @@ const TripDetails = () => {
     if (!tripData?.data) return <div>No trip found</div>
 
     const trip = tripData.data;
-    const acceptedBookings = bookingsData?.data?.filter(b => b.bookings_status === 'ACCEPTED') || [];
+    const acceptedBookings = bookingsData?.data?.filter(b => b.bookings_status === 'ACCEPTED' || b.bookings_status === 'COMPLETED') || [];
 
     return (
         <div className="flex flex-col gap-2">

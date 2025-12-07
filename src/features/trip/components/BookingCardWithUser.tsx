@@ -8,11 +8,12 @@ interface BookingCardWithUserProps {
     booking: Booking;
     onAccept?: () => void;
     onReject?: () => void;
+    onComplete?: () => void;
     compact?: boolean;
     children?: React.ReactNode;
 }
 
-const BookingCardWithUser: React.FC<BookingCardWithUserProps> = ({ booking, onAccept, onReject, compact, children }) => {
+const BookingCardWithUser: React.FC<BookingCardWithUserProps> = ({ booking, onAccept, onReject, onComplete, compact, children }) => {
     const { data: user } = useGetUser(booking.rider_id);
 
     const userData = user?.data;
@@ -24,6 +25,7 @@ const BookingCardWithUser: React.FC<BookingCardWithUserProps> = ({ booking, onAc
             booking={booking}
             onAccept={onAccept}
             onReject={onReject}
+            onComplete={onComplete}
             compact={compact}
             passenger={compact ? { name: passengerName, image: passengerPic } : undefined}
         >

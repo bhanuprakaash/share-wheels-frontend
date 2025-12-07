@@ -32,6 +32,18 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({ trips }) => {
         }
     }
 
+    const startTrip = (tripId: TripId) => {
+        if (userId) {
+            updateTripStatusMutation.mutate({
+                driverId: userId,
+                tripId: tripId,
+                tripPayload: {
+                    status: 'IN_PROGRESS'
+                }
+            })
+        }
+    }
+
     const getTripMenuItems = (trip: TripDataWithWaypoints): DropdownItem[] => [
         {
             id: 'view',
@@ -81,6 +93,7 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({ trips }) => {
                             type="button"
                             variant={"secondary"}
                             customClasses={"text-sm font-bold px-6 py-2"}
+                            onClick={() => startTrip(trip.trip_id)}
                         >
                             Start Trip
                         </Button>

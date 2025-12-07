@@ -1,24 +1,59 @@
+import { useMemo } from "react";
 import ScheduledTrips from "./SheduledTrips.tsx";
 import ActiveTrips from "./ActiveTrips.tsx";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../../../user/selectors/userSelectors.ts";
 import { useGetDriverTrips } from "../../hooks/useTrip.ts";
+import type { TabItem } from "../../../../shared/components/basic/Tabs.tsx";
+import Tabs from "../../../../shared/components/basic/Tabs.tsx";
+import CompletedTrips from "./CompletedTrips.tsx";
 
 const Trips = () => {
     const userId = useSelector(selectUserId);
-    const {isLoading, isError, data} = useGetDriverTrips(userId);
+    const { isLoading, isError, data } = useGetDriverTrips(userId);
 
-    if (isLoading) return <div>Loading...</div>
-    if (isError) return <div>Error...</div>
+    const { tabItems, defaultTab } = useMemo(() => {
+        const rawTrips = data?.data || [];
 
-    const scheduledTrips = data?.data?.filter(trip => trip.trip_status === 'SCHEDULED') || [];
-    const activeTrips = data?.data?.filter(trip => trip.trip_status === 'IN_PROGRESS') || [];
+        const scheduled = rawTrips.filter(trip => trip.trip_status === 'SCHEDULED');
+        const active = rawTrips.filter(trip => trip.trip_status === 'IN_PROGRESS');
+        const completed = rawTrips.filter(trip => trip.trip_status === 'COMPLETED');
 
+        const items: TabItem[] = [
+            {
+                id: 'active',
+                label: 'Active',
+                count: active.length,
+                content: <ActiveTrips trips={active} />
+            },
+            {
+                id: 'scheduled',
+                label: 'Scheduled',
+                count: scheduled.length,
+                content: <ScheduledTrips trips={scheduled} />
+            },
+            {
+                id: 'completed',
+                label: 'Completed',
+                count: completed.length,
+                content: <CompletedTrips trips={completed} />
+            }
+        ];
+
+        const initialTab = active.length > 0 ? 'active' : 'scheduled';
+
+        return { tabItems: items, defaultTab: initialTab };
+    }, [data]);
+
+    if (isLoading) return <div className="p-4 text-center text-gray-500">Loading trips...</div>;
+    if (isError) return <div className="p-4 text-center text-red-500">Error loading trips</div>;
 
     return (
-        <div className="flex flex-col gap-6">
-            {activeTrips.length > 0 && <ActiveTrips trips={activeTrips} />}
-            <ScheduledTrips trips={scheduledTrips} />
+        <div className="w-full">
+            <Tabs
+                items={tabItems}
+                defaultActiveId={defaultTab}
+            />
         </div>
     )
 }

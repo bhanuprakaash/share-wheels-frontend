@@ -12,8 +12,13 @@ const TripBookings: React.FC<TripBookingsProps> = ({ tripId }) => {
     const { data: bookings, isLoading } = useBookingsByTrip(tripId, isExpanded);
     const { mutate: updateStatus } = useUpdateBookingStatusByDriver();
 
+
     const handleAccept = (bookingId: string) => {
         updateStatus({ booking_id: bookingId, booking_status: "ACCEPTED" });
+    };
+
+    const handleComplete = (bookingId: string) => {
+        updateStatus({ booking_id: bookingId, booking_status: "COMPLETED" });
     };
 
     const handleReject = (bookingId: string) => {
@@ -49,6 +54,7 @@ const TripBookings: React.FC<TripBookingsProps> = ({ tripId }) => {
                             booking={booking}
                             onAccept={() => handleAccept(booking.booking_id)}
                             onReject={() => handleReject(booking.booking_id)}
+                            onComplete={() => handleComplete(booking.booking_id)}
                             compact={true}
                         >
                             <p className="text-xs text-gray-500">
