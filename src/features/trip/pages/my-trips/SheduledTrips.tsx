@@ -1,7 +1,6 @@
 import React from "react";
 
-import Title from "../../../../shared/components/basic/Title.tsx";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TripCard from "../../../../shared/components/cards/TripCard.tsx";
 import Button from "../../../../shared/components/forms/Button.tsx";
 import type { TripDataWithWaypoints, TripId } from "../../types/trip.ts";
@@ -70,15 +69,6 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({ trips }) => {
 
     return (
         <div className="flex flex-col gap-2 w-full">
-            <div className="flex justify-between items-center gap-2 p-2">
-                <Title title="Scheduled trips" />
-                <Link
-                    to="schedule-trip"
-                    className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-3xl px-6 py-2 leading-normal tracking-[0.015em] bg-[#E8F2E8] text-[#0F1A0F]"
-                >
-                    <span className="font-bold self-center text-sm">Schedule a Trip</span>
-                </Link>
-            </div>
             {trips.length === 0 ? (
                 <div className="text-center">No trips scheduled</div>
             ) : (

@@ -7,6 +7,8 @@ import { useGetDriverTrips } from "../../hooks/useTrip.ts";
 import type { TabItem } from "../../../../shared/components/basic/Tabs.tsx";
 import Tabs from "../../../../shared/components/basic/Tabs.tsx";
 import CompletedTrips from "./CompletedTrips.tsx";
+import Title from "../../../../shared/components/basic/Title.tsx";
+import { Link } from "react-router-dom";
 
 const Trips = () => {
     const userId = useSelector(selectUserId);
@@ -50,6 +52,15 @@ const Trips = () => {
 
     return (
         <div className="w-full">
+            <div className="flex justify-between items-center gap-2 p-2">
+                <Title title="My Trips" />
+                <Link
+                    to="schedule-trip"
+                    className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-3xl px-6 py-2 leading-normal tracking-[0.015em] bg-[#E8F2E8] text-[#0F1A0F]"
+                >
+                    <span className="font-bold self-center text-sm">Schedule a Trip</span>
+                </Link>
+            </div>
             <Tabs
                 items={tabItems}
                 defaultActiveId={defaultTab}

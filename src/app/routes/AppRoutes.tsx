@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { LoginPage, SignupPage } from "../../features/auth";
@@ -33,7 +33,7 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute redirectPath={"/login"} />}>
         <Route element={<ProtectedLayout />}>
-          <Route path="/" element={<div>HOME</div>} />
+          {/* <Route path="/" element={<SearchTrips />} /> */}
 
           {/* trip routes */}
           <Route path="/trip">
@@ -47,9 +47,8 @@ const AppRoutes = () => {
             <Route index element={<Rides />} />
           </Route>
 
-          <Route path="/search">
-            <Route index element={<SearchTrips />} />
-          </Route>
+          <Route path="/search" element={<SearchTrips />} />
+          <Route path="/" element={<Navigate to="/search" replace />} />
 
           {/* profile routes */}
           <Route path="/profile">
