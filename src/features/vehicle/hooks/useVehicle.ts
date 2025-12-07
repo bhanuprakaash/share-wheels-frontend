@@ -1,7 +1,7 @@
-import {skipToken, useMutation, useQuery} from "@tanstack/react-query";
-import type {AxiosError} from "axios";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 
-import {addNewVehicle, deleteVehicle, getMyVehicles, getVehicleById, updateVehicle} from "../services/vehicleApi.ts";
+import { addNewVehicle, deleteVehicle, getMyVehicles, getVehicleById, updateVehicle } from "../services/vehicleApi.ts";
 import type {
     AddNewVehiclePayload, DeleteVehicleOptions, DeleteVehicleResponse, GetUserVehicleResponse,
     GetVehicleByIdResponse,
@@ -9,9 +9,10 @@ import type {
     NewVehicleResponse, UpdateVehicleOptions, UpdateVehiclePayload, UpdateVehicleResponse, UseVehicleOptions,
     VehicleId
 } from "../types/vehicle.ts";
-import type {UserID} from "../../user/types/user.ts";
+import type { UserID } from "../../user/types/user.ts";
 import queryClient from "../../../shared/api/tanstackQueryClient.ts";
-import type {ErrorResponse} from "../../../shared/types/global.ts";
+import type { ErrorResponse } from "../../../shared/types/global.ts";
+import { toastError, toastSuccess } from "../../../shared/utils/toast.ts";
 
 
 export const vehicleKeys = {
@@ -22,14 +23,15 @@ export const vehicleKeys = {
 
 export const useAddVehicle = (options?: NewUserVehicleOptions) => {
     return useMutation<NewVehicleResponse, AxiosError, { newVehiclePayload: AddNewVehiclePayload }>({
-        mutationFn: ({newVehiclePayload}) => addNewVehicle(newVehiclePayload),
+        mutationFn: ({ newVehiclePayload }) => addNewVehicle(newVehiclePayload),
         onSuccess: (data) => {
+            toastSuccess("Vehicle added successfully")
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: vehicleKeys.user_vehicle(responseData.driver_id!)});
+            void queryClient.invalidateQueries({ queryKey: vehicleKeys.user_vehicle(responseData.driver_id!) });
             options?.onSuccess?.(responseData);
         },
         onError: (error) => {
-            console.log(error);
+            toastError(error)
             const errorData = (error.response?.data as ErrorResponse) ?? null;
             options?.onError?.(error, errorData)
         }
@@ -58,15 +60,16 @@ export const useUpdateVehicle = (options?: UpdateVehicleOptions) => {
         vehicleId: VehicleId,
         vehiclePayload: UpdateVehiclePayload
     }>({
-        mutationFn: ({vehicleId, vehiclePayload}) => updateVehicle(vehicleId, vehiclePayload),
+        mutationFn: ({ vehicleId, vehiclePayload }) => updateVehicle(vehicleId, vehiclePayload),
         onSuccess: (data) => {
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: vehicleKeys.vehicle(responseData.vehicle_id)});
-            void queryClient.invalidateQueries({queryKey: vehicleKeys.user_vehicle(responseData.driver_id!)});
+            toastSuccess("Vehicle updated successfully")
+            void queryClient.invalidateQueries({ queryKey: vehicleKeys.vehicle(responseData.vehicle_id) });
+            void queryClient.invalidateQueries({ queryKey: vehicleKeys.user_vehicle(responseData.driver_id!) });
             options?.onSuccess?.(responseData);
         },
         onError: (error) => {
-            console.log(error);
+            toastError(error)
             const errorData = (error.response?.data as ErrorResponse) ?? null;
             options?.onError?.(error, errorData)
         }
@@ -75,15 +78,16 @@ export const useUpdateVehicle = (options?: UpdateVehicleOptions) => {
 
 export const useDeleteVehicle = (options?: DeleteVehicleOptions) => {
     return useMutation<DeleteVehicleResponse, AxiosError, { vehicleId: VehicleId, userId: UserID }>({
-        mutationFn: ({vehicleId}) => deleteVehicle(vehicleId),
+        mutationFn: ({ vehicleId }) => deleteVehicle(vehicleId),
         onSuccess: (data, variables) => {
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: vehicleKeys.vehicle(responseData.vehicle_id)});
-            void queryClient.invalidateQueries({queryKey: vehicleKeys.user_vehicle(variables.userId)});
+            toastSuccess("Vehicle deleted successfully")
+            void queryClient.invalidateQueries({ queryKey: vehicleKeys.vehicle(responseData.vehicle_id) });
+            void queryClient.invalidateQueries({ queryKey: vehicleKeys.user_vehicle(variables.userId) });
             options?.onSuccess?.(data);
         },
         onError: (error) => {
-            console.log(error);
+            toastError(error)
             const errorData = (error.response?.data as ErrorResponse) ?? null;
             options?.onError?.(error, errorData)
         }

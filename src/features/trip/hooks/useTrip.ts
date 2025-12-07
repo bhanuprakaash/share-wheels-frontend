@@ -1,5 +1,5 @@
-import {skipToken, useMutation, useQuery} from "@tanstack/react-query";
-import type {AxiosError} from "axios";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 
 import type {
     CombinedCreateTripPayload,
@@ -16,10 +16,11 @@ import {
     updateTrip,
     updateTripStatus
 } from "../services/tripApi.ts";
-import type {ApiResponse, ErrorResponse} from "../../../shared/types/global.ts";
-import type {UserID} from "../../user/types/user.ts";
+import type { ApiResponse, ErrorResponse } from "../../../shared/types/global.ts";
+import type { UserID } from "../../user/types/user.ts";
 import queryClient from "../../../shared/api/tanstackQueryClient.ts";
-import type {SearchResultsResponse, TripSearchQuery} from "../types/search.ts";
+import type { SearchResultsResponse, TripSearchQuery } from "../types/search.ts";
+import { toastError, toastSuccess } from "../../../shared/utils/toast.ts";
 
 export const tripKeys = {
     all: ['trip'] as const,
@@ -30,20 +31,21 @@ export const tripKeys = {
     driverTrips: () => [...tripKeys.all, 'driver_trips'] as const,
     driverTrip: (id: UserID) => [...tripKeys.driverTrips(), id] as const,
 
-    list: (filters: TripSearchQuery) => [...tripKeys.all, {filters}] as const,
+    list: (filters: TripSearchQuery) => [...tripKeys.all, { filters }] as const,
 
 };
 
 export const useCreateTrip = (options?: CreateTripOptions) => {
     return useMutation<TripResponse, AxiosError, { tripPayload: CombinedCreateTripPayload }>({
-        mutationFn: ({tripPayload}) => createTrip(tripPayload),
+        mutationFn: ({ tripPayload }) => createTrip(tripPayload),
         onSuccess: (data) => {
+            toastSuccess("Trip created successfully")
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: tripKeys.driverTrip(responseData.driver_id!)});
+            void queryClient.invalidateQueries({ queryKey: tripKeys.driverTrip(responseData.driver_id!) });
             options?.onSuccess?.(responseData);
         },
         onError: (err) => {
-            console.log(err);
+            toastError(err)
             const errorData = (err.response?.data as ErrorResponse) ?? null;
             options?.onError?.(err, errorData)
         }
@@ -77,15 +79,16 @@ export const useGetDriverTrips = (id: UserID | undefined) => {
 
 export const useUpdateTrip = (options?: UpdateTripOptions) => {
     return useMutation<TripResponse, AxiosError, { tripId: TripId, tripPayload: UpdateTripPayload }>({
-        mutationFn: ({tripId, tripPayload}) => updateTrip(tripId, tripPayload),
+        mutationFn: ({ tripId, tripPayload }) => updateTrip(tripId, tripPayload),
         onSuccess: (data) => {
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: tripKeys.detail(responseData.trip_id)});
-            void queryClient.invalidateQueries({queryKey: tripKeys.driverTrip(responseData.driver_id!)});
+            toastSuccess("Trip updated successfully")
+            void queryClient.invalidateQueries({ queryKey: tripKeys.detail(responseData.trip_id) });
+            void queryClient.invalidateQueries({ queryKey: tripKeys.driverTrip(responseData.driver_id!) });
             options?.onSuccess?.(responseData);
         },
         onError: (err) => {
-            console.log(err);
+            toastError(err)
             const errorData = (err.response?.data as ErrorResponse) ?? null;
             options?.onError?.(err, errorData)
         }
@@ -98,15 +101,16 @@ export const useUpdateTripStatus = (options?: UpdateTripStatusOptions) => {
         tripId: TripId,
         tripPayload: UpdateTripStatusPayload
     }>({
-        mutationFn: ({tripId, tripPayload}) => updateTripStatus(tripId, tripPayload),
+        mutationFn: ({ tripId, tripPayload }) => updateTripStatus(tripId, tripPayload),
         onSuccess: (data, variables) => {
             const responseData = data.data;
-            void queryClient.invalidateQueries({queryKey: tripKeys.detail(responseData.trip_id)});
-            void queryClient.invalidateQueries({queryKey: tripKeys.driverTrip(variables.driverId!)})
+            toastSuccess("Trip status updated successfully")
+            void queryClient.invalidateQueries({ queryKey: tripKeys.detail(responseData.trip_id) });
+            void queryClient.invalidateQueries({ queryKey: tripKeys.driverTrip(variables.driverId!) })
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            console.log(err);
+            toastError(err)
             const errorData = (err.response?.data as ErrorResponse) ?? null;
             options?.onError?.(err, errorData)
         }
@@ -115,14 +119,15 @@ export const useUpdateTripStatus = (options?: UpdateTripStatusOptions) => {
 
 export const useDeleteTrip = (options?: DeleteTripOptions) => {
     return useMutation<DeleteTripResponse, AxiosError, { tripId: TripId, driverId: UserID }>({
-        mutationFn: ({tripId}) => deleteTrip(tripId),
+        mutationFn: ({ tripId }) => deleteTrip(tripId),
         onSuccess: (data, variables) => {
-            void queryClient.invalidateQueries({queryKey: tripKeys.detail(variables.tripId)});
-            void queryClient.invalidateQueries({queryKey: tripKeys.driverTrip(variables.driverId!)});
+            toastSuccess("Trip deleted successfully")
+            void queryClient.invalidateQueries({ queryKey: tripKeys.detail(variables.tripId) });
+            void queryClient.invalidateQueries({ queryKey: tripKeys.driverTrip(variables.driverId!) });
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            console.log(err);
+            toastError(err)
             const errorData = (err.response?.data as ErrorResponse) ?? null;
             options?.onError?.(err, errorData)
         }

@@ -4,6 +4,8 @@ import {Provider as ReduxProvider} from "react-redux";
 import {QueryClientProvider} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {store} from "./store.ts";
+import { Toaster } from 'react-hot-toast';
+
 
 import queryClient from "../shared/api/tanstackQueryClient.ts";
 import AuthWrapper from "../shared/components/AuthWrapper.tsx";
@@ -20,6 +22,7 @@ const Providers: React.FC<ProviderProps> = ({children}) => {
                     <AuthWrapper>
                         {children}
                     </AuthWrapper>
+                    <Toaster position="bottom-right" />
                     <ReactQueryDevtools initialIsOpen={false}/>
                 </QueryClientProvider>
             </ReduxProvider>

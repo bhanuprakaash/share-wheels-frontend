@@ -16,6 +16,7 @@ import type {
 import type { AxiosError } from "axios";
 import type { CreateBookingOptions } from "../types/search.ts";
 import type { ErrorResponse } from "../../../shared/types/global.ts";
+import { toastError, toastSuccess } from "../../../shared/utils/toast.ts";
 
 export const useBooking = (options?: CreateBookingOptions) => {
   const queryClient = useQueryClient();
@@ -27,12 +28,13 @@ export const useBooking = (options?: CreateBookingOptions) => {
     mutationFn: ({ bookingPayload }) => createBooking(bookingPayload),
     onSuccess: (data) => {
       const responseData = data.data;
+      toastSuccess("Booking created successfully")
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
       queryClient.invalidateQueries({ queryKey: ["trips"] });
       options?.onSuccess?.(responseData);
     },
     onError: (err) => {
-      console.log(err);
+      toastError(err);
       const errorData = (err.response?.data as ErrorResponse) ?? null;
       options?.onError?.(err, errorData);
     },
@@ -72,6 +74,9 @@ export const useUpdateBookingStatusByDriver = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
       queryClient.invalidateQueries({ queryKey: ["trips"] });
+      toastSuccess("Booking status updated successfully")
+    }, onError: (err) => {
+      toastError(err);
     },
   });
 };
@@ -85,8 +90,12 @@ export const useUpdateBookingStatusByRider = () => {
   >({
     mutationFn: (payload) => updateBookingStatusByRider(payload),
     onSuccess: () => {
+      toastSuccess("Booking status updated successfully")
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
       queryClient.invalidateQueries({ queryKey: ["trips"] });
+    },
+    onError: (err) => {
+      toastError(err);
     },
   });
 };

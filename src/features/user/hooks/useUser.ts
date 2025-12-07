@@ -1,7 +1,7 @@
-import {skipToken, useMutation, useQuery} from "@tanstack/react-query";
-import {useDispatch} from "react-redux";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 
-import type {AxiosError} from "axios";
+import type { AxiosError } from "axios";
 
 import type {
     DeleteUserOptions,
@@ -18,11 +18,14 @@ import type {
 import type {
     ErrorResponse,
 } from "../../../shared/types/global.ts";
-import {deleteUser, fetchMe, getUser, resetPassword, updateUser} from "../services/userApi.ts";
+import { deleteUser, fetchMe, getUser, resetPassword, updateUser } from "../services/userApi.ts";
 import queryClient from "../../../shared/api/tanstackQueryClient.ts";
-import {clearUser, setUser} from "../slices/userSlice.ts";
-import {clearAuth} from "../../auth/slices/authSlice.ts";
-import {useNavigate} from "react-router-dom";
+import { clearUser, setUser } from "../slices/userSlice.ts";
+import { clearAuth } from "../../auth/slices/authSlice.ts";
+import { useNavigate } from "react-router-dom";
+import { requestFcmToken } from "../../auth/config/firebase.ts";
+import { unregisterFcmToken } from "../../auth/services/authApi.ts";
+import { toastError, toastSuccess } from "../../../shared/utils/toast.ts";
 
 export const userKeys = {
     all: ['user'] as const,
@@ -53,7 +56,8 @@ export const useLogoutUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const logout = () => {
+    const logout = async (userId: UserID) => {
+        await unregisterToken(userId);
         localStorage.removeItem('authToken');
         dispatch(clearUser());
         dispatch(clearAuth());
@@ -61,31 +65,42 @@ export const useLogoutUser = () => {
         navigate('/login');
     };
 
-    return {logout};
+    return { logout };
 }
+
+const unregisterToken = async (userId: UserID) => {
+    try {
+        const fcmToken = await requestFcmToken();
+        if (fcmToken) {
+            await unregisterFcmToken(userId, fcmToken);
+        }
+    } catch (error) {
+        console.error("Failed to sync FCM token", error);
+    }
+};
 
 export const useUpdateUser = (options?: UpdateUserOptions) => {
     const dispatch = useDispatch();
     return useMutation<UpdateUserResponse, AxiosError, { id: UserID, payload: UpdateUserPayload }>({
-        mutationFn: ({id, payload}) => updateUser(id, payload),
+        mutationFn: ({ id, payload }) => updateUser(id, payload),
         onSuccess: (data, variables) => {
-            void queryClient.invalidateQueries({queryKey: userKeys.detail(variables.id!)});
-            void queryClient.invalidateQueries({queryKey: userKeys.me()});
+            void queryClient.invalidateQueries({ queryKey: userKeys.detail(variables.id!) });
+            void queryClient.invalidateQueries({ queryKey: userKeys.me() });
             const responseData = data.data;
             if (responseData && responseData.user_id && responseData.user_id === variables.id) {
                 dispatch(setUser(responseData));
             }
             options?.onSuccess?.(data, variables);
+            toastSuccess("User updated successfully") 
         },
         onError: (error, variables) => {
-            console.log('Full error object:', error);
 
             let errorData: ErrorResponse | null = null;
 
             if (error.response?.data) {
                 errorData = error.response.data as ErrorResponse;
             }
-
+            toastError(error)
             options?.onError?.(error, errorData, variables);
         }
     })
@@ -93,13 +108,13 @@ export const useUpdateUser = (options?: UpdateUserOptions) => {
 
 export const useUpdatePassword = (options?: UpdateUserPasswordOptions) => {
     return useMutation<UpdateUserPasswordResponse, AxiosError, { id: UserID, payload: UpdateUserPasswordPayload }>({
-        mutationFn: ({id, payload}) => resetPassword(id, payload),
+        mutationFn: ({ id, payload }) => resetPassword(id, payload),
         onSuccess: (data, variables, context) => {
-            console.log(data);
+            toastSuccess("Password updated successfully") 
             options?.onSuccess?.(data, variables, context);
         },
         onError: (error, variables) => {
-            console.log(error);
+            toastError(error)
             let errorData: ErrorResponse | null = null;
             if (error.response?.data) {
                 errorData = error.response.data as ErrorResponse;
@@ -109,21 +124,21 @@ export const useUpdatePassword = (options?: UpdateUserPasswordOptions) => {
     })
 }
 
-export const useDeleteUser = (options ?: DeleteUserOptions) => {
+export const useDeleteUser = (options?: DeleteUserOptions) => {
     const dispatch = useDispatch();
     return useMutation<DeleteUserResponse, AxiosError, { id: UserID }>({
-        mutationFn: ({id}) => deleteUser(id),
+        mutationFn: ({ id }) => deleteUser(id),
         onSuccess: (data, variables) => {
-            console.log(data)
-            void queryClient.invalidateQueries({queryKey: userKeys.detail(variables.id!)});
-            void queryClient.removeQueries({queryKey: userKeys.detail(variables.id!)});
+            toastSuccess("User deleted successfully") 
+            void queryClient.invalidateQueries({ queryKey: userKeys.detail(variables.id!) });
+            void queryClient.removeQueries({ queryKey: userKeys.detail(variables.id!) });
             localStorage.removeItem('authToken');
             dispatch(clearUser());
             dispatch(clearAuth());
             options?.onSuccess?.(data, variables);
         },
         onError: (error) => {
-            console.log(error);
+            toastError(error)
             let errorData: ErrorResponse | null = null;
             if (error.response?.data) {
                 errorData = error.response.data as ErrorResponse;

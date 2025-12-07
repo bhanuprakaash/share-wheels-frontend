@@ -1,14 +1,14 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import InputField from "../../../shared/components/forms/InputField.tsx";
 import Button from "../../../shared/components/forms/Button.tsx";
 import Logo from "../../../shared/components/basic/Logo.tsx";
 import userValidation from "../../../shared/utils/validation/userValidation.ts";
-import type {LoginUserPayload} from "../types/auth.ts";
-import {useLoginUser} from "../hooks/useAuth.ts";
-import {selectIsAuthenticated} from "../selectors/authSelectors.ts";
+import type { LoginUserPayload } from "../types/auth.ts";
+import { useLoginUser } from "../hooks/useAuth.ts";
+import { selectIsAuthenticated } from "../selectors/authSelectors.ts";
 
 const LoginPage = () => {
     const [loginCredentials, setLoginCredentials] = useState<LoginUserPayload>({
@@ -21,10 +21,10 @@ const LoginPage = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const navigate = useNavigate();
 
-    const {validateEmail, validatePassword} = userValidation;
+    const { validateEmail, validatePassword } = userValidation;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setLoginCredentials({
             ...loginCredentials,
             [name]: value,
@@ -32,14 +32,14 @@ const LoginPage = () => {
     }
 
     const isValidCredentials = useMemo(() => {
-        const {email, password} = loginCredentials;
+        const { email, password } = loginCredentials;
         return validateEmail(email) && validatePassword(password);
     }, [loginCredentials, validateEmail, validatePassword]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (isValidCredentials) {
-            loginMutation.mutate({loginUserPayload: loginCredentials});
+            loginMutation.mutate({ loginUserPayload: loginCredentials });
         }
     }
 
@@ -60,7 +60,7 @@ const LoginPage = () => {
             <div className="w-lg">
                 <div className="bg-[#ffffff] rounded-lg shadow-xl p-8">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                        <Logo customClasses={"m-auto"}/>
+                        <Logo customClasses={"m-auto"} />
                         <InputField
                             name={"email"}
                             label={"Email"}

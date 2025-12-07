@@ -17,3 +17,13 @@ export const loginUser = async (loginUserPayload: LoginUserPayload): Promise<Log
     const response = await axiosInstance.post(`${BASE_URL}/api/user/login`, loginUserPayload);
     return response.data;
 }
+
+export const registerFcmToken = async (userId: string, fcmToken: string): Promise<string> => {
+    const response = await axiosInstance.post(`${BASE_URL}/api/user/register-fcm-token/${userId}`, { fcmToken });
+    return response.data;
+}
+
+export const unregisterFcmToken = async (userId: string, fcmToken: string): Promise<string> => {
+    const response = await axiosInstance.post(`${BASE_URL}/api/user/unregister-fcm-token/${userId}`, { fcmToken });
+    return response.data;
+}   

@@ -5,6 +5,8 @@ import axios, {
     type InternalAxiosRequestConfig
 } from "axios";
 
+import { toastError } from "../utils/toast.ts";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -41,6 +43,7 @@ axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 axiosInstance.interceptors.response.use((response: AxiosResponse) => {
     return response;
 }, (error: AxiosError) => {
+    toastError(error);
     if ((error.response?.status === 403 || error.response?.status === 401) && handleLogout) {
         handleLogout();
     }
