@@ -24,7 +24,6 @@ import ProtectedLayout from "../../shared/components/layouts/ProtectedLayout.tsx
 const AppRoutes = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   console.log("isAuthenticated: ", isAuthenticated);
-  console.log("MY API URL IS:", import.meta.env.VITE_API_BASE_URL);
 
   return (
     <Routes>
