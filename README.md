@@ -1,69 +1,57 @@
-# React + TypeScript + Vite
+# ShareWheels Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The modern, web client for **ShareWheels**, a P2P carpooling platform.  
+Built with **React, TypeScript**, this application delivers a seamless **real-time experience** using WebSockets for instant notifications and TanStack Query for efficient server state management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Key Features
 
-## Expanding the ESLint configuration
+- **Real-Time Notifications**  
+  Integrated Socket.IO Client with a custom Context Provider to deliver instant booking updates  
+  (via Toast & Notification Center) without page refreshes.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Secure Authentication**  
+  JWT-based auth flow managed via Redux Toolkit, featuring persistent sessions and protected routes.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Firebase Integration**  
+  Firebase Cloud Messaging (FCM) is used for push notifications, enabling real-time alerts even when the app is in the background.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **Optimized Data Fetching**  
+  Powered by TanStack Query (React Query) for caching, optimistic updates, and background synchronization.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Interactive Maps**  
+  Uses Google Maps API to visualize routes and trip journey.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Responsive UI**  
+  Styled with Tailwind CSS for a high-performance design.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Client Architecture
+
+The frontend is designed to handle **asynchronous server state** and **synchronous UI state** in separate layers.
+
+| Layer           | Technology                     | Purpose                                                              |
+| --------------- | ------------------------------ | -------------------------------------------------------------------- |
+| Global UI State | Redux Toolkit                  | Manages client-only state like auth, modals, sidebar, etc.           |
+| Server State    | TanStack Query                 | Manages API data caching, loading states, and background refetching. |
+| Real-Time Layer | Socket.IO Client               | Maintains persistent WebSocket connection for live updates.          |
+| Notifications   | Context API + Toast            | Listens to socket events and dispatches toast alerts globally.       |
+| Push Messaging  | Firebase Cloud Messaging (FCM) | Delivers background and system-level push notifications.             |
+
+---
+
+## Tech Stack
+
+- **Framework:** React (v19+) + TypeScript
+- **Build Tool:** Vite (super-fast HMR)
+- **State Management:** Redux Toolkit & TanStack Query
+- **Styling:** Tailwind CSS
+- **Routing:** React Router DOM
+- **Real-Time:** Socket.IO Client
+- **Push Notifications:** Firebase Cloud Messaging (FCM)
+- **Maps:** Google Maps JavaScript API
+- **UI Components:** React Hot Toast for notifications
+
+---
