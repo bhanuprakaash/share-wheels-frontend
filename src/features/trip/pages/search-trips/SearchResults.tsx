@@ -12,6 +12,7 @@ import Modal from "../../../../shared/components/modals/Modal";
 import InputField from "../../../../shared/components/forms/InputField";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../../shared/components/basic/Loader";
+import { toastSuccess } from "../../../../shared/utils/toast";
 
 const LoadingState = () => (
   <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
@@ -42,9 +43,8 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
   };
 
   const createBookingMutation = useBooking({
-    onSuccess: (data) => {
-      console.log("Booking successful");
-      console.log(data);
+    onSuccess: () => {
+      toastSuccess("booking successful");
       navigate("/rides")
     },
     onError: (error) => {
@@ -54,7 +54,6 @@ const TripResults = ({ trips }: { trips: SearchTripData[] }) => {
 
   const userId = useSelector(selectUserId);
 
-  console.log(selectedTrip);
 
   const handleCreateBooking = () => {
     if (!selectedTrip || !userId) return;

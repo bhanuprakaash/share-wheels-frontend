@@ -19,12 +19,10 @@ import { toastSuccess, toastError } from "../../../shared/utils/toast.ts";
 export const useCreateUser = () => {
     return useMutation<CreateUserResponse, AxiosError, CreateUserPayload>({
         mutationFn: createUser,
-        onSuccess: (data) => {
-            console.log(data);
+        onSuccess: () => {
             toastSuccess("Account created successfully");
         },
         onError: (err) => {
-            console.log(err);
             toastError(err);
         }
     })
@@ -44,7 +42,6 @@ export const useLoginUser = () => {
             toastSuccess("Logged in successfully");
         },
         onError: (err) => {
-            console.log(err);
             toastError(err);
         }
     })

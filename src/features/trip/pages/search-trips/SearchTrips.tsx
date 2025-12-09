@@ -58,7 +58,6 @@ const SearchTrips = () => {
     }
   };
 
-  console.log(filters);
   const trips = data?.data?.trips;
   return (
     <div className="flex flex-col gap-2 p-2">
