@@ -44,7 +44,7 @@ const NotificationsPage = () => {
     <div className="max-w-3xl mx-auto p-4">
       <Title title={`Notifications (${notifications.length})`} />
 
-      <div className="space-y-4">
+      <div className="space-y-4 mt-5">
         {notifications.map((n, index) => {
           const style =
             notificationStyles[n.type] ||
