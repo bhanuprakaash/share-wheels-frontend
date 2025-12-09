@@ -47,6 +47,10 @@ const LoginPage = () => {
     navigate("/reset-password");
   };
 
+  const handleNavigateToSignup = () => {
+    navigate("/signup");
+  };
+
   useEffect(() => {
     if (loginMutation.isSuccess && isAuthenticated) {
       navigate("/");
@@ -95,6 +99,12 @@ const LoginPage = () => {
               onClick={handleNavigate}
             >
               Forgot password?
+            </p>
+            <p
+              className="text-xs ml-auto cursor-pointer"
+              onClick={handleNavigateToSignup}
+            >
+              Don't have an account? <span className="text-[#5A8C5A]">Sign up</span>
             </p>
           </form>
         </div>

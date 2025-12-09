@@ -19,7 +19,9 @@ const CompletedTrips: React.FC<CompletedTripsProps> = ({ trips }) => {
                 <Title title="Completed trips" />
             </div>
             {trips.length === 0 ? (
-                <div className="text-center">No trips completed</div>
+                <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
+                    No trips completed
+                </div>
             ) : (
                 trips.map((trip) => (
                     <TripCard

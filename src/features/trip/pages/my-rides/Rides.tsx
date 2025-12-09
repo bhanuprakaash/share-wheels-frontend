@@ -10,6 +10,7 @@ import ConfirmationModal from "../../../../shared/components/modals/Confirmation
 import type { TabItem } from "../../../../shared/components/basic/Tabs";
 import Tabs from "../../../../shared/components/basic/Tabs";
 import type { Booking } from "../../types/booking";
+import FullScreenLoader from "../../../../shared/components/basic/FullScreenLoader";
 
 const Rides = () => {
   const riderId = useSelector(selectUserId);
@@ -48,8 +49,7 @@ const Rides = () => {
   }, [updateBookingStatus]);
 
   const BookingList = ({ list, showActions = false }: { list: Booking[], showActions?: boolean }) => {
-    if (list.length === 0) return <p className="text-gray-500 py-4 text-center">No rides found.</p>;
-
+    if (list.length === 0) return <p className="text-gray-500 py-4 text-center text-center text-gray-500 flex items-center justify-center h-[75vh]">No rides found.</p>;
     return (
       <div className="flex flex-col gap-4 p-2">
         {list.map((booking) => (
@@ -103,8 +103,8 @@ const Rides = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookings, handleCancel, handleComplete]);
 
-  if (isLoading) return <p className="p-4">Loading rides...</p>;
-  if (error) return <p className="p-4 text-red-500">Error fetching rides</p>;
+  if (isLoading) return <FullScreenLoader />;
+  if (error) return <div className="text-center text-gray-500 flex items-center justify-center">Error fetching rides</div>;
 
   return (
     <div className="flex flex-col gap-2 w-full">

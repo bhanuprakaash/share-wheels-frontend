@@ -11,15 +11,15 @@ interface ActiveTripsProps {
 
 const ActiveTrips: React.FC<ActiveTripsProps> = ({ trips }) => {
 
-    console.log(trips)
-
     return (
         <div className="flex flex-col gap-2 w-full">
             <div className="flex justify-between items-center gap-2 p-2">
                 <Title title="Active Trips" />
             </div>
             {trips?.length === 0 ? (
-                <div className="text-center">No Active Trips</div>
+                <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
+                    No Active Trips.
+                </div>
             ) : (
                 trips.map((trip) => (
                     <TripCard key={trip.trip_id} trip={trip}>

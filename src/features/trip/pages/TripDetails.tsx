@@ -11,6 +11,7 @@ import { selectUser } from "../../user/selectors/userSelectors.ts";
 import TripMapCard from "../../../shared/components/cards/TripMapCard.tsx";
 import PassengerItem from "../components/PassengerItem.tsx";
 import { useBookingsByTrip } from "../hooks/useBooking.ts";
+import FullScreenLoader from "../../../shared/components/basic/FullScreenLoader.tsx";
 
 const TripDetails = () => {
 
@@ -44,13 +45,18 @@ const TripDetails = () => {
     if (!tripId) {
         return <div>Invalid trip ID</div>;
     }
-    if (isTripLoading) return <div>Loading...</div>
-    if (isTripError) return <div>Error...</div>
+    if (isTripLoading) return <FullScreenLoader />
+    if (isTripError) return <div className="text-center text-gray-500 flex items-center justify-center">Error...</div>
     if (!tripData?.data) return <div>No trip found</div>
 
     const trip = tripData.data;
     const acceptedBookings = bookingsData?.data?.filter(b => b.bookings_status === 'ACCEPTED' || b.bookings_status === 'COMPLETED') || [];
+    const firstName = user?.first_name || '';
+    const lastName = user?.last_name || '';
 
+    const passengerName = (firstName || lastName)
+        ? `${firstName} ${lastName}`.trim()
+        : 'Unknown Passenger';
     return (
         <div className="flex flex-col gap-2">
             <div className="flex gap-2 items-center p-2">
@@ -68,7 +74,7 @@ const TripDetails = () => {
                         vehicleDetails={getVehicleDetails()}
                         showVehicle={!!vehicleId}
                         driver={{
-                            name: user?.first_name + ' ' + user?.last_name,
+                            name: passengerName,
                             profile_picture: user?.profile_picture,
                         }}
                         passengers={

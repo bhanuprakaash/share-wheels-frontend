@@ -11,6 +11,7 @@ import Icon from "../../../../shared/components/basic/Icon.tsx";
 import SelectField from "../../../../shared/components/forms/SelectField.tsx";
 import TextAreaField from "../../../../shared/components/forms/TextareaField.tsx";
 import Button from "../../../../shared/components/forms/Button.tsx";
+import FullScreenLoader from "../../../../shared/components/basic/FullScreenLoader.tsx";
 
 const ProfileSettings = () => {
     const navigate = useNavigate();
@@ -122,7 +123,7 @@ const ProfileSettings = () => {
     }
 
     if (isLoading) {
-        return <p>Loading....</p>
+        return <FullScreenLoader />
     }
 
     if (isError) {

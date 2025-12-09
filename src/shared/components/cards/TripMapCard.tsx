@@ -2,6 +2,7 @@ import {GoogleMap, useJsApiLoader, DirectionsService, DirectionsRenderer, Marker
 import React, {useCallback, useMemo, useState} from "react";
 import type {TripDataWithWaypoints} from "../../../features/trip/types/trip.ts";
 import {getDirectionsServiceParams} from "../../utils/common.ts";
+import Loader from '../basic/Loader.tsx';
 
 const containerStyle = {
     width: '100%',
@@ -121,7 +122,7 @@ const TripMapCard: React.FC<{ trip: TripDataWithWaypoints }> = ({trip}) => {
             })}
         </GoogleMap>
     ) : (
-        <div>Loading Map...</div>
+        <Loader />
     );
 };
 

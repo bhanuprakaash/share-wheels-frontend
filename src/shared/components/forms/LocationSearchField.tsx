@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useDebounce from "../../hooks/useDebounce.ts";
-import type {LocationOption} from "../../../features/trip/components/TripForm.tsx";
-import {searchLocationUsingGeoCode} from "../../api/mapsApi.ts";
+import type { LocationOption } from "../../../features/trip/components/TripForm.tsx";
+import { searchLocationUsingGeoCode } from "../../api/mapsApi.ts";
 import InputField from "./InputField.tsx";
+import Loader from "../basic/Loader.tsx";
 
 interface LocationSearchFieldProps {
     label: string;
@@ -126,7 +127,7 @@ const LocationSearchField: React.FC<LocationSearchFieldProps> = (
             {showOptions && (
                 <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
                     {loading ? (
-                        <li className="px-4 py-2 text-gray-500">Loading...</li>
+                        <li className="px-4 py-2 text-gray-500"><Loader /></li>
                     ) : options.length > 0 ? (
                         options.map((option, index) => (
                             <li

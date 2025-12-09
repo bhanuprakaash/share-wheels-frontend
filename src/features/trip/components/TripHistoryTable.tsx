@@ -14,7 +14,7 @@ const TripHistoryTable: React.FC<TripHistoryTableProps> = ({userId}) => {
     const {isLoading, isError, data} = useGetDriverTrips(userId);
 
     if (isLoading) return <div className="p-4">Loading trip history...</div>;
-    if (isError) return <div className="p-4 text-red-600">Error loading trip history</div>;
+    if (isError) return <div className="text-center text-gray-500 flex items-center justify-center">Error loading trip history</div>;
 
     const getStatusColor = (status: TripDataWithWaypoints['trip_status']) => {
         switch (status) {

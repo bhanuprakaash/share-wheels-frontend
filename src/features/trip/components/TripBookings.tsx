@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useBookingsByTrip, useUpdateBookingStatusByDriver } from "../hooks/useBooking";
 import BookingCardWithUser from "./BookingCardWithUser";
 import Icon from "../../../shared/components/basic/Icon";
+import Loader from "../../../shared/components/basic/Loader";
 
 interface TripBookingsProps {
     tripId: string;
@@ -44,7 +45,7 @@ const TripBookings: React.FC<TripBookingsProps> = ({ tripId }) => {
 
             {isExpanded && (
                 <div className="mt-2 flex flex-col gap-2 pl-4 border-l-2 border-[#E8F2E8] max-h-[250px] overflow-y-scroll hide-scrollbar">
-                    {isLoading && <p className="text-sm text-gray-500">Loading bookings...</p>}
+                    {isLoading && <div className="text-sm text-gray-500"><Loader /></div>}
                     {!isLoading && bookings?.data?.length === 0 && (
                         <p className="text-sm text-gray-500">No bookings for this trip.</p>
                     )}

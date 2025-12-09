@@ -11,15 +11,16 @@ import Button from "../../../../shared/components/forms/Button";
 import Modal from "../../../../shared/components/modals/Modal";
 import InputField from "../../../../shared/components/forms/InputField";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../../../shared/components/basic/Loader";
 
 const LoadingState = () => (
   <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
-    Loading trips...
+    <Loader />
   </div>
 );
 
 const ErrorState = ({ error }: { error: AxiosError | null }) => (
-  <div className="text-center text-red-500 flex items-center justify-center h-[75vh]">
+  <div className="text-center text-gray-500 flex items-center justify-center">
     Error fetching trips: {error?.message}
   </div>
 );

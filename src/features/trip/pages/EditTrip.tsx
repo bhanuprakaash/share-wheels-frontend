@@ -9,6 +9,7 @@ import TripForm from "../components/TripForm.tsx";
 import {useGetUserVehicles} from "../../vehicle/hooks/useVehicle.ts";
 import {useSelector} from "react-redux";
 import {selectUserId} from "../../user/selectors/userSelectors.ts";
+import FullScreenLoader from "../../../shared/components/basic/FullScreenLoader.tsx";
 
 const EditTrip = () => {
     const [trip, setTrip] = useState<UpdateTripPayload>({});
@@ -68,10 +69,10 @@ const EditTrip = () => {
     }
 
     if (isLoading) return (
-        <div>Loading...</div>
+        <FullScreenLoader />
     )
     if (isError) return (
-        <div>Error...</div>
+        <div className="text-center text-gray-500 flex items-center justify-center">Error...</div>
     )
     if (!tripDataResponse?.data) return (
         <div>No trip found</div>

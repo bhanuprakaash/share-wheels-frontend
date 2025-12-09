@@ -9,6 +9,7 @@ import Tabs from "../../../../shared/components/basic/Tabs.tsx";
 import CompletedTrips from "./CompletedTrips.tsx";
 import Title from "../../../../shared/components/basic/Title.tsx";
 import { Link } from "react-router-dom";
+import FullScreenLoader from "../../../../shared/components/basic/FullScreenLoader.tsx";
 
 const Trips = () => {
     const userId = useSelector(selectUserId);
@@ -47,8 +48,8 @@ const Trips = () => {
         return { tabItems: items, defaultTab: initialTab };
     }, [data]);
 
-    if (isLoading) return <div className="p-4 text-center text-gray-500">Loading trips...</div>;
-    if (isError) return <div className="p-4 text-center text-red-500">Error loading trips</div>;
+    if (isLoading) return <FullScreenLoader />;
+    if (isError) return <div className="text-center text-gray-500 flex items-center justify-center">Error loading trips</div>;
 
     return (
         <div className="w-full">

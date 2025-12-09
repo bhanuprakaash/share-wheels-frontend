@@ -70,7 +70,9 @@ const ScheduledTrips: React.FC<ScheduledTripsProps> = ({ trips }) => {
     return (
         <div className="flex flex-col gap-2 w-full">
             {trips.length === 0 ? (
-                <div className="text-center">No trips scheduled</div>
+                <div className="text-center text-gray-500 flex items-center justify-center h-[75vh]">
+                    No trips scheduled
+                </div>
             ) : (
                 trips.map((trip) => (
                     <TripCard

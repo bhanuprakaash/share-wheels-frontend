@@ -9,6 +9,7 @@ import VehicleCard from "./VehicleCard.tsx";
 import Modal from "../../../shared/components/modals/Modal.tsx";
 import VehicleForm from "./VehicleForm.tsx";
 import ConfirmationModal from "../../../shared/components/modals/ConfirmationModal.tsx";
+import FullScreenLoader from "../../../shared/components/basic/FullScreenLoader.tsx";
 
 interface AddVehicleCardProps {
     onClick: () => void;
@@ -139,11 +140,11 @@ const UserVehicles = () => {
     }, [deleteVehicle, handleCloseDeleteModal, selectedVehicle])
 
     if (isLoading) {
-        return <div>Loading User Vehicles</div>
+        return <FullScreenLoader />
     }
 
     if (isError) {
-        return <div>Error Loading User Vehicles</div>
+        return <div className="text-center text-gray-500 flex items-center justify-center">Error loading user vehicles</div>
     }
 
     return (

@@ -7,6 +7,7 @@ import Logo from "../../../shared/components/basic/Logo.tsx";
 import userValidation from "../../../shared/utils/validation/userValidation.ts";
 import {useCreateUser} from "../hooks/useAuth.ts";
 import type {CreateUserPayload} from "../types/auth.ts";
+import { toastError } from "../../../shared/utils/toast.ts";
 
 const SignupPage = () => {
     const [createUserData, setCreateUserData] = useState<CreateUserPayload>({
@@ -37,6 +38,8 @@ const SignupPage = () => {
         e.preventDefault();
         if (isValidCredentials) {
             userCreateMutation.mutate(createUserData);
+        } else {
+            toastError("Invalid credentials");
         }
     }
 

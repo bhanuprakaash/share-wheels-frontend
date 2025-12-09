@@ -17,7 +17,12 @@ const BookingCardWithUser: React.FC<BookingCardWithUserProps> = ({ booking, onAc
     const { data: user } = useGetUser(booking.rider_id);
 
     const userData = user?.data;
-    const passengerName = userData ? `${userData.first_name} ${userData.last_name}` : 'Unknown Passenger';
+    const firstName = userData?.first_name || '';
+    const lastName = userData?.last_name || '';
+
+    const passengerName = (firstName || lastName)
+        ? `${firstName} ${lastName}`.trim()
+        : 'Unknown Passenger';
     const passengerPic = userData?.profile_picture || profilePicture;
 
     return (

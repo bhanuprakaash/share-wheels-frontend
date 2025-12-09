@@ -3,6 +3,7 @@ import type { Booking, WaypointData } from "../../../features/trip/types/booking
 import Icon from "../basic/Icon";
 import { convertISOtoLocalDate, convertISOtoLocalTime } from "../../utils/common";
 import { useGetTrip } from "../../../features/trip/hooks/useTrip";
+import Loader from "../basic/Loader";
 
 interface BookingCardProps {
   booking: Booking;
@@ -30,13 +31,21 @@ const BookingCard: React.FC<BookingCardProps> = ({
   compact = false,
   passenger
 }) => {
-  let startLocation = "Trip Start";
-  let endLocation = "Trip End";
+
 
   const { waypoint_data } = booking;
 
-  const { data: trip } = useGetTrip(booking.trip_id);
+  const { data: trip, isLoading } = useGetTrip(booking.trip_id);
 
+  if (isLoading) return <Loader />;
+
+  let startLocation = "Trip Start";
+  let endLocation = "Trip End";
+
+  if (trip) {
+    startLocation = trip?.data?.start_location_name || "Trip Start";
+    endLocation = trip?.data?.end_location_name || "Trip End";
+  }
 
   if (waypoint_data) {
     const wp: WaypointData = Array.isArray(waypoint_data)

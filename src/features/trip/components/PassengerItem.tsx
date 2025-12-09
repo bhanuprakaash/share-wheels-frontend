@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGetUser } from '../../user/hooks/useUser';
 import profilePicture from '../../../assets/profile-picture.png';
+import Loader from '../../../shared/components/basic/Loader';
 
 interface PassengerItemProps {
     riderId: string;
@@ -10,10 +11,17 @@ interface PassengerItemProps {
 const PassengerItem: React.FC<PassengerItemProps> = ({ riderId, seats }) => {
     const { data: user, isLoading } = useGetUser(riderId);
 
-    if (isLoading) return <div className="flex items-center gap-2 p-2 px-0"><p className="text-xs">Loading...</p></div>;
+    if (isLoading) return <div className="flex items-center gap-2 p-2 px-0">
+        <Loader />
+    </div>;
 
     const userData = user?.data;
-    const name = userData ? `${userData.first_name} ${userData.last_name}` : 'Unknown Passenger';
+    const firstName = userData?.first_name || '';
+    const lastName = userData?.last_name || '';
+
+    const name = (firstName || lastName)
+        ? `${firstName} ${lastName}`.trim()
+        : 'Unknown Passenger';
     const pic = userData?.profile_picture || profilePicture;
 
     return (

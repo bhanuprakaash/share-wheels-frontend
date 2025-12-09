@@ -77,7 +77,7 @@ const UserPreferenceSettings = () => {
     }
 
     if (isError) {
-        return <p>Error....</p>
+        return <div className="text-center text-gray-500 flex items-center justify-center">Error...</div>
     }
 
     return (
