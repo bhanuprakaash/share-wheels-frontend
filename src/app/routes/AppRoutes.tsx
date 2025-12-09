@@ -20,6 +20,7 @@ import { selectIsAuthenticated } from "../../features/auth/selectors/authSelecto
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import AuthRedirectRoute from "./AuthRedirect.tsx";
 import ProtectedLayout from "../../shared/components/layouts/ProtectedLayout.tsx";
+import NotificationsPage from "../../features/notifications/pages/Notifications.tsx";
 
 const AppRoutes = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -63,6 +64,8 @@ const AppRoutes = () => {
               element={<PrivacyAndSecuritySettings />}
             />
           </Route>
+
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
       </Route>
       <Route path="*" element={<div>404 - Page Not Found</div>} />

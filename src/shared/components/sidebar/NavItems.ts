@@ -8,6 +8,7 @@ const navItems: NavItem[] = [
     {path: '/search', name: 'Search', icon: 'search'},
     {path: '/trip', name: 'My Trips', icon: 'directions_car'},
     {path: '/rides', name: 'My Rides', icon: 'directions_car'},
+    {path: '/notifications', name: 'Notifications', icon:'notifications'},
     {path: '/profile', name: 'Profile', icon: 'person'},
 ];
 
